@@ -1,0 +1,34 @@
+dev:
+  (description): Runs the Flutter application with hot reload enabled, ignoring deprecation warnings.
+  (scripts): flutter run --debug --hot --ignore-deprecation
+
+pretest:
+  (description): Clean Existing Coverage reports
+  (scripts): rm -rf coverage
+
+test:
+  (description): Runs all tests in the Flutter project without coverage reporting.
+  (scripts): flutter test --concurrency=4 --test-randomize-ordering-seed=random --dart-define=FLUTTER_TEST=true --no-color
+
+reinstall:
+  (description): Cleans and reinstalls the Flutter project by removing old builds, regenerate boiler-plate codes
+  (scripts):
+    - flutter clean
+    - flutter packages get
+    - (cd ios && pod install)
+    - (cd macos && pod install)
+
+format:
+  (description): Applies automated fixes, sorts imports, and formats the codebase to ensure consistent code quality.
+  (scripts):
+    - dart fix --apply
+    - dart format --line-length 120 .
+    - dart run import_sorter:main
+
+hard:
+  (description): Forces an upgrade of Flutter and its packages to their latest versions and updates CocoaPods
+  (scripts):
+    - flutter upgrade --force
+    - flutter packages upgrade --major-versions --tighten
+    - (cd ios && pod update)
+    - (cd macos && pod update)
