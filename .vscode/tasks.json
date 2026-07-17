@@ -1,0 +1,36 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "merry",
+      "script": "test",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "label": "merry: test",
+      "detail": "Runs all tests in the Flutter project without coverage reporting."
+    },
+    {
+      "type": "merry",
+      "script": "test-coverage",
+      "group": {
+        "kind": "test"
+      },
+      "problemMatcher": [],
+      "label": "merry: test-coverage",
+      "detail": "Runs all tests in the Flutter project with coverage enabled."
+    },
+    {
+      "type": "merry",
+      "script": "test-coverage-report",
+      "group": {
+        "kind": "test"
+      },
+      "problemMatcher": [],
+      "label": "merry: test-coverage-report",
+      "detail": "Runs tests with coverage and generates HTML and directory reports."
+    }
+  ]
+}

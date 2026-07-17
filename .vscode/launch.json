@@ -5,30 +5,54 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch development",
+      "name": "Launch debug development",
       "request": "launch",
       "type": "dart",
-      "program": "lib/main_development.dart",
-      "args": [
+      "program": "lib/main.dart",
+      "flutterMode": "debug",
+      "debuggerType": "flutter",
+      "toolArgs": ["--flavor", "development"]
+    },
+    {
+      "name": "Launch profile development",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "profile",
+      "toolArgs": ["--flavor", "development"]
+    },
+    {
+      "name": "Launch staging (TestFlight)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "profile",
+      "toolArgs": ["--flavor", "staging"]
+    },
+    {
+      "name": "Launch production (Release)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "flutterMode": "release",
+      "toolArgs": [
         "--flavor",
-        "development",
-        "--target",
-        "lib/main_development.dart"
+        "production",
+        "--build-number $(TZ='Asia/Seoul' date +'%y%m%d%H')"
       ]
     },
     {
-      "name": "Launch staging",
-      "request": "launch",
+      "name": "Flutter Test (Random Order)",
       "type": "dart",
-      "program": "lib/main_staging.dart",
-      "args": ["--flavor", "staging", "--target", "lib/main_staging.dart"]
-    },
-    {
-      "name": "Launch production",
       "request": "launch",
-      "type": "dart",
-      "program": "lib/main_production.dart",
-      "args": ["--flavor", "production", "--target", "lib/main_production.dart"]
+      "program": "test",
+      "toolArgs": [
+        "--concurrency 2",
+        "--coverage",
+        "--dart-define",
+        "FLUTTER_TEST=true",
+        "--test-randomize-ordering-seed random"
+      ]
     }
   ]
 }

@@ -1,0 +1,54 @@
+{
+  "[dart]": {
+    "cSpell.fixSpellingWithRenameProvider": true,
+    "editor.suggest.preview": true
+  },
+  "[json]": {
+    "editor.indentSize": "tabSize",
+    "editor.tabSize": 2
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "copy-code-as-snippet.aiMode.enabled": true,
+  "copy-code-as-snippet.largeFile.lineThreshold": 2000,
+  "copy-code-as-snippet.largeFile.promptEnabled": true,
+  "copy-code-as-snippet.markdown.fenceStrategy": "autoUpgrade",
+  "dart.analysisExcludedFolders": ["build"],
+  "dart.buildRunnerAdditionalArgs": [],
+  "dart.documentation": "full",
+  "dart.flutterHotReloadOnSave": "all",
+  "dart.lineLength": 120,
+  "dart.openDevTools": "flutter",
+  "dart.previewCommitCharacters": true,
+  "dart.previewFlutterUiGuides": true,
+  "dart.previewFlutterUiGuidesCustomTracking": true,
+  "dart.previewHotReloadOnSaveWatcher": true,
+  "dart.promptToRunIfErrors": true,
+  "dart.renameFilesWithClasses": "prompt",
+  "dart.runPubGetOnNestedProjects": "none",
+  "dart.showTodos": ["TODO", "FIXME", "UNDONE", "HACK"],
+  "explorer.confirmPasteNative": false,
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "*": "${capture}.lock",
+    "*.dart": "${capture}.*.dart",
+    "firebase.json": ".firebaserc,remoteconfig.*.json",
+    "analysis_options.yaml": "flutter_lints.yaml",
+    "flutter_launcher_icons-prod.yaml": "flutter_launcher_icons-*.yaml",
+    "pubspec.yaml": "pubspec.lock,devtools_options.yaml,build.yaml,pubspec_overrides.yaml,.packages,.flutter-plugins,.flutter-plugins-dependencies,.metadata"
+  },
+  "files.associations": {
+    ".firebaserc": "json",
+    "*-json": "json",
+    "*.entitlements": "xml",
+    "*.fingerprint": "json",
+    "*.xcscheme": "xml",
+    "*.xcsettings": "xml",
+    "*.xcworkspacedata": "xml",
+    "CodeResources": "xml"
+  },
+  "gitlens.ai.generateCommitMessage.customInstructions": "Draft commit messages using Conventional Commits with gitmoji, and summarize staged changes without reading entire files. Use when a user asks to write commit messages, check staged changes, or format commits as <type>: <gitmoji> <subject> with a body.",
+  "markdownlint.configFile": ".trunk/configs/.markdownlint.yaml"
+}
