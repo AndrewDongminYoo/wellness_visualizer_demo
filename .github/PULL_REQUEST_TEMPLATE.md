@@ -1,24 +1,27 @@
-<!--
-  Thanks for contributing!
+<!-- markdownlint-disable -->
 
-  Provide a description of your changes below and a general summary in the title
+## Summary
 
-  Please look at the following checklist to ensure that your PR can be accepted quickly:
--->
+<!-- Why this change exists and what user or workflow outcome it improves. -->
 
-## Description
+## Type of change
 
-<!--- Describe your changes in detail -->
-
-## Type of Change
-
-<!--- Put an `x` in all the boxes that apply: -->
-
-- [ ] ✨ New feature (non-breaking change which adds functionality)
-- [ ] 🛠️ Bug fix (non-breaking change which fixes an issue)
-- [ ] ❌ Breaking change (fix or feature that would cause existing functionality to change)
-- [ ] 🧹 Code refactor
-- [ ] ✅ Build configuration change
+- [ ] ✨ Feature
+- [ ] 🐛 Fix
+- [ ] ♻️ Refactor
+- [ ] ✅ Build / CI
 - [ ] 📝 Documentation
-- [ ] 🗑️ Chore
-- [ ] 🧪 Test
+- [ ] 🧹 Chore
+- [ ] ❗ Breaking change
+
+## Verification
+
+- [ ] `trunk fmt`
+- [ ] `merry format`
+- [ ] `merry test`
+- [ ] `flutter analyze`
+- [ ] Other (describe below)
+
+## Notes
+
+<!-- Screenshots, rollout details, migration notes, follow-up tasks, or risks. -->

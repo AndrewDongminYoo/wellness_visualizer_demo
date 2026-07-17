@@ -1,0 +1,40 @@
+{
+  "version": "0.2",
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "dictionaries": ["vgv_allowed", "lorem", "flutter", "wellness_visualizer"],
+  "dictionaryDefinitions": [
+    {
+      "name": "vgv_allowed",
+      "path": "https://raw.githubusercontent.com/verygoodopensource/very_good_dictionaries/main/allowed.txt",
+      "description": "Allowed VGV Spellings"
+    },
+    {
+      "name": "lorem",
+      "path": "https://raw.githubusercontent.com/streetsidesoftware/cspell-dicts/refs/heads/main/dictionaries/lorem-ipsum/dict/lorem.txt",
+      "description": "Lorem-ipsum dictionary for cspell."
+    },
+    {
+      "name": "flutter",
+      "path": "./.cspell/flutter.txt"
+    },
+    {
+      "name": "wellness_visualizer",
+      "path": "./.cspell/wellness_visualizer.txt",
+      "addWords": true
+    }
+  ],
+  "ignoreWords": ["meta-data"],
+  "ignorePaths": [
+    ".gitignore",
+    "**/project.pbxproj",
+    "lib/firebase_options*.dart",
+    "**/google-services.json",
+    "**/*.storekit",
+    "**/Info.plist",
+    "**/GoogleService-Info.plist"
+  ],
+  "useGitignore": true,
+  "allowCompoundWords": true,
+  "flagWords": [],
+  "words": ["wellness_visualizer"]
+}
