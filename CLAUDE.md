@@ -55,7 +55,6 @@ If the API drifts again, fix only `AudioEngine._readBands` (compare with the pac
 
 - `.github/copilot-instructions.md` and `.github/AGENTS.md` are leftovers from a different template project ("WarmWake") and reference files that don't exist here (`PLAN.md`, `docs/`, root `AGENTS.md`, `test/`). Ignore them.
 - `analysis_options.yaml` includes the repo-local `flutter_lints.yaml` (a checked-in copy of the full SDK lint list with per-rule overrides) — the `flutter_lints` package include is not used.
-- `l10n.yaml` points to a removed `lib/l10n/`; stale from the pre-cleanup template.
 
 ## Extension Directions (from README)
 
