@@ -15,8 +15,6 @@ reinstall:
   (scripts):
     - flutter clean
     - flutter packages get
-    - (cd ios && pod install)
-    - (cd macos && pod install)
 
 format:
   (description): Applies automated fixes, sorts imports, and formats the codebase to ensure consistent code quality.
@@ -30,5 +28,3 @@ hard:
   (scripts):
     - flutter upgrade --force
     - flutter packages upgrade --major-versions --tighten
-    - (cd ios && pod update)
-    - (cd macos && pod update)

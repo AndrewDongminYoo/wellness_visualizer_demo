@@ -53,6 +53,7 @@ If the API drifts again, fix only `AudioEngine._readBands` (compare with the pac
 
 ## Known Config Quirks
 
+- iOS/macOS use Flutter's Swift Package Manager integration, not CocoaPods — the Podfiles were removed after commit `1b94738` (whose message says the opposite). Never run `pod install`; plugin resolution happens via `FlutterGeneratedPluginSwiftPackage` during `flutter run`/build.
 - `.github/copilot-instructions.md` and `.github/AGENTS.md` are leftovers from a different template project ("WarmWake") and reference files that don't exist here (`PLAN.md`, `docs/`, root `AGENTS.md`, `test/`). Ignore them.
 - `analysis_options.yaml` includes the repo-local `flutter_lints.yaml` (a checked-in copy of the full SDK lint list with per-rule overrides) — the `flutter_lints` package include is not used.
 
