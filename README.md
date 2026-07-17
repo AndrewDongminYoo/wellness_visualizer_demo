@@ -17,10 +17,10 @@ flutter pub get
 flutter run   # physical device recommended — simulators misrepresent shader performance
 ```
 
-Manually add 2 assets (git-ignored):
+Both assets ship with the repo (royalty-free sources):
 
-- `assets/audio/ambient.mp3` — Royalty-free ambient/meditation track (e.g., Pixabay Music). Tracks with some dynamic range show better visual response (avoid purely drone-style tracks).
-- `assets/images/theme.jpg` — Vertical image of a night sky or lake (Unsplash).
+- `assets/audio/ambient.mp3` — Royalty-free ambient/meditation track. Tracks with some dynamic range show better visual response (Zin Uru, by Arulo).
+- `assets/images/theme.jpg` — Vertical night-sky image (Unsplash, photo by Vincentiu Solomon).
 
 ## Note: flutter_soloud API
 

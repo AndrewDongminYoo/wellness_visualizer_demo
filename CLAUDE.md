@@ -20,7 +20,7 @@ dart run import_sorter:main
 
 Common task scripts (run/test/format/reinstall) are defined in `merry.yaml` (referenced from `pubspec.yaml`'s `scripts:` key).
 There is no test suite.
-Two assets must be added manually before running (git-ignored, see README): `assets/audio/ambient.mp3` and `assets/images/theme.jpg`.
+The two runtime assets (`assets/audio/ambient.mp3`, `assets/images/theme.jpg`) are royalty-free and committed to the repo.
 
 ## Architecture
 
