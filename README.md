@@ -1,44 +1,48 @@
-# Wellness Visualizer Demo
+# Wellness Visualizer
 
-Demo for the Upwork job (“Flutter Developer – Music Visualizations for Wellness App”).
-Two types of audio-responsive visualizers + a combined mode.
-Layered over the track’s static theme image.
+<!-- HERO VIDEO: embed a 15–30s demo recording here (GIF or linked mp4). -->
 
-## Composition
+A personal Flutter project exploring audio-reactive rendering: real-time FFT analysis drives fragment shaders and a particle system, tuned for a calm, meditative aesthetic rather than a beat-synced light show.
+Everything renders over a static theme image with zero widget rebuilds per frame.
 
-- **Aurora** — FragmentShader (`shaders/aurora.frag`). Three layers of fbm noise curtains, teal→violet palette. Bass → curtain width/height, mid → brightness, treble → ripple detail.
-- **Fireflies** — ~90 CustomPainter particles. Slow curl drift, audio mapped only to **glow**, not speed (key to maintaining a wellness mood).
-- **Audio Analysis** — Real-time FFT via `flutter_soloud`. Attack ~50 ms / Release ~800 ms. Asymmetric smoothing creates a “rising” effect instead of “flickering.” These tuning values are what set this demo apart, so be sure to fine-tune the `tau` value in `audio_engine.dart` to match your track before recording.
+## Visualizers
 
-## Setup
+- **Aurora** — a full-screen fragment shader (`shaders/aurora.frag`) layering three FBM noise curtains in a teal→violet palette, composited with `BlendMode.plus`. Bass drives curtain width and height, mids drive brightness, treble adds ripple detail.
+- **Fireflies** — ~90 particles rendered by a single-pass `CustomPainter`. They drift on slow curl noise while the audio modulates only their glow.
+- **Both** — the two layers stacked, which is the intended viewing mode.
+
+## Design decisions
+
+**Swell, don't strobe.**
+Band energies pass through asymmetric attack/release smoothing (~50 ms attack, ~800 ms release), so visuals rise quickly with the music and fade out slowly instead of flickering on every transient.
+
+**Audio maps to glow, never to speed.**
+Particle motion stays slow and constant regardless of the track; loudness only changes brightness and bloom.
+Keeping motion decoupled from the beat is what preserves the wellness mood.
+
+**Zero widget rebuilds per frame.**
+A single `Ticker` advances a `ValueNotifier<double>` clock and pumps the audio engine once per frame.
+Both painters repaint via `Listenable.merge([time, bands])` — no `setState` in the render path (mode switching is the only rebuild).
+Both layers hold 60 fps on device: the aurora runs on the GPU and the fireflies are one `drawCircle` pass.
+
+**One seam to the audio library.**
+`flutter_soloud` provides playback and FFT; its raw output is normalized into smoothed bass/mid/treble/energy bands behind a single reader method, so the visualizers never touch the audio API directly.
+
+## Running it
 
 ```bash
 flutter pub get
-flutter run   # physical device recommended — simulators misrepresent shader performance
+flutter run   # use a physical device — simulators misrepresent shader performance
 ```
 
-Both assets ship with the repo (royalty-free sources):
+Both assets ship with the repo (royalty-free sources, credited below).
 
-- `assets/audio/ambient.mp3` — Royalty-free ambient/meditation track. Tracks with some dynamic range show better visual response (Zin Uru, by Arulo).
-- `assets/images/theme.jpg` — Vertical night-sky image (Unsplash, photo by Vincentiu Solomon).
+## Possible extensions
 
-## Note: flutter_soloud API
+Ripples (radial distance field in the same shader pattern), constellations (particles plus proximity lines), sacred geometry (polar-coordinate shaders).
+For low-end devices: reduce the particle count and drop FBM octaves from 5 to 3.
 
-The `AudioData` API has undergone breaking changes between major versions.
-The code targets ^4.x, where the per-sample getters (`getLinearFft`) were replaced by `getAudioData()` returning a `Float32List` — in linear mode the first 256 floats are FFT bins and the next 256 are wave samples.
-If the API drifts again, compare with the visualizer example in the package’s `example/` directory and modify only the `_readBands()` method in `audio_engine.dart`.
-The rest of the code simply consumes `Bands` values, so it’s unaffected.
+## Credits
 
-## Recording Guide (for Proposal Attachment)
-
-1. Use a physical device (simulators do not accurately reflect shader performance) with a track that evokes a darkroom atmosphere.
-2. 15–30 seconds. Start in **Both** mode → switch to Aurora or Fireflies mode alone midway through to demonstrate compliance with the “multiple styles” requirement.
-3. Edit the recording to include both quiet and intense sections so that the audio responsiveness is clearly visible.
-4. Record the iPhone screen → Do not edit; leave it as is. The goal is to demonstrate the direction, not to present a finished product.
-5. Upload to YouTube (unlisted) or Loom, and include the link in the proposal.
-
-## Performance Notes (Points to use in proposals/interviews)
-
-- Both layers run comfortably at 60 fps even without `RepaintBoundary` (shaders run on the GPU; 90 particles use a single-pass `drawCircle`). To support low-end Android devices, reduce the number of particles and lower the FBM octave (5→3).
-- No `setState` frame loop — `Ticker` + `ValueNotifier` are directly connected to `CustomPainter.repaint`. Zero widget rebuilds per frame.
-- Expansion directions: ripples (same shader pattern with a radial distance field), constellations (particles + proximity lines), sacred geometry (polar coordinate shaders).
+- Audio: "Zin Uru" by Arulo (royalty-free ambient track)
+- Theme image: photo by [Vincentiu Solomon](https://unsplash.com/@vincentiu) on Unsplash
