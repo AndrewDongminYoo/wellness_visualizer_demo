@@ -1,6 +1,12 @@
 # Wellness Visualizer
 
-<!-- HERO VIDEO: embed a 15–30s demo recording here (GIF or linked mp4). -->
+<p align="center">
+  <img src="public/demo.gif" width="300" alt="Aurora and firefly visualizers glowing in sync with ambient music" />
+</p>
+
+<p align="center">
+  <a href="public/recording.mp4">▶ Watch the full demo with sound (50 s, 2.2 MB)</a>
+</p>
 
 A personal Flutter project exploring audio-reactive rendering: real-time FFT analysis drives fragment shaders and a particle system, tuned for a calm, meditative aesthetic rather than a beat-synced light show.
 Everything renders over a static theme image with zero widget rebuilds per frame.

@@ -330,7 +330,7 @@ test/hive_test/alarm_id_mappings.lock
 *.war
 
 # Large Media Files
-*.mp4
+# *.mp4 # For Demo Purposes
 *.tiff
 *.avi
 *.flv
