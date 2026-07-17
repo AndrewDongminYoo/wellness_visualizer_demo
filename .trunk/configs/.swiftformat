@@ -1,0 +1,3 @@
+# .swiftformat
+--disable sortImports
+--disable sortedImports
