@@ -1,5 +1,11 @@
 # Custom Dictionary
+Arulo
 Dongmin
+donminzzi
+fract
+glsl
+highp
 Pixabay
+srgb
 strobing
 Upwork
