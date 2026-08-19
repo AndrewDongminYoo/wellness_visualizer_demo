@@ -48,7 +48,7 @@ class _VisualizerScreenState extends State<VisualizerScreen> with SingleTickerPr
   void initState() {
     super.initState();
     _ticker = createTicker(_onTick);
-    unawaited(_ticker.start());
+    _ticker.start();
   }
 
   void _onTick(Duration elapsed) {
