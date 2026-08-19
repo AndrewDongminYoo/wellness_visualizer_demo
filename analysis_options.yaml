@@ -82,6 +82,9 @@ linter:
 analyzer:
   exclude:
     - build/**
+    - android/**
+    - ios/**
+    - macos/**
     # - "**/*.g.dart"
     # - "**/*.freezed.dart"
   language:
