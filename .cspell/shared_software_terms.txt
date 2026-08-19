@@ -1,0 +1,31 @@
+allprojects
+Autolayout
+autorecalculates
+Autoresizing #storyboard
+Buildables #xcscheme
+CFLAGS #xcconfig
+dists #properties
+FMWK
+fract #frag
+futureor
+getenv
+glsl #frag
+highp #frag
+Instantitation #xib
+jvmargs #properties
+LLDB #xcscheme
+lldbinit #xcscheme
+miniaturizable #xib
+parallelizable #xcscheme
+pbxproj #pbxproj
+Podfiles
+Proguard
+SRCROOT
+stdlib #gradle
+Subviews #storyboard
+Testables #xcscheme
+tostring
+Wconditional
+Wmissing
+Wnullable
+Woverlength

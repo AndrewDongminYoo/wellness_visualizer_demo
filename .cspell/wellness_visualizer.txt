@@ -1,11 +1,9 @@
-# Custom Dictionary
-Arulo
+Desaturated
 Dongmin
 donminzzi
-fract
-glsl
-highp
-Pixabay
-srgb
+Metaspace
+smoothstep
+soloud
+soloud's
 strobing
 Upwork
