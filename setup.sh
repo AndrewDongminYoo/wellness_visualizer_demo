@@ -134,6 +134,11 @@ else
 	mv "${TMP_DIR}/flutter" "${FLUTTER_INSTALL_DIR}"
 fi
 
+if ! git config --global --get-all safe.directory 2>/dev/null |
+	grep -Fqx -- "${FLUTTER_INSTALL_DIR}"; then
+	git config --global --add safe.directory "${FLUTTER_INSTALL_DIR}"
+fi
+
 FLUTTER_BIN="${FLUTTER_INSTALL_DIR}/bin/flutter"
 DART_BIN="${FLUTTER_INSTALL_DIR}/bin/dart"
 PROFILE_LINE="export PATH=\"${FLUTTER_INSTALL_DIR}/bin:${PUB_CACHE}/bin:${TRUNK_INSTALL_DIR}:\$PATH\""
