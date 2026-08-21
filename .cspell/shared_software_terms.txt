@@ -7,6 +7,7 @@ Autoresizing #storyboard
 Buildables #xcscheme
 CFLAGS #xcconfig
 dists #properties
+flutterfire
 FMWK
 fract #frag
 futureor
@@ -31,6 +32,8 @@ swiftformat
 taplo
 Testables #xcscheme
 tostring
+urllib
+urlopen
 Wconditional
 Wmissing
 Wnullable
