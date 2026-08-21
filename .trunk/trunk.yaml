@@ -22,9 +22,9 @@ lint:
     - taplo
     - bandit
     - dart
+    - pinact
   enabled:
     - grype@0.110.0
-    - pinact@4.0.0
     - swiftformat@0.62.1
     - cspell@10.0.1
     - black@26.5.1

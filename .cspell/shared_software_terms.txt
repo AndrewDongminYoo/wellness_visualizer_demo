@@ -1,4 +1,6 @@
 allprojects
+amannn
+anthropics
 Autolayout
 autorecalculates
 Autoresizing #storyboard
@@ -18,11 +20,15 @@ lldbinit #xcscheme
 miniaturizable #xib
 parallelizable #xcscheme
 pbxproj #pbxproj
+pinact
 Podfiles
 Proguard
 SRCROOT
 stdlib #gradle
+subosito
 Subviews #storyboard
+swiftformat
+taplo
 Testables #xcscheme
 tostring
 Wconditional
