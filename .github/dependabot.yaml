@@ -17,3 +17,9 @@ updates:
     directory: /
     schedule:
       interval: daily
+    ignore:
+      # flutter_soloud 5 removed AudioData and GetSamplesKind, which lib/audio uses (#27 broke analyze).
+      # update-types limits this to version updates; security updates still open.
+      - dependency-name: flutter_soloud
+        update-types:
+          - version-update:semver-major
