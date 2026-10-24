@@ -4,6 +4,15 @@ updates:
     directory: /
     schedule:
       interval: daily
+    groups:
+      # Every version update, majors included, in one PR; CI runs the actions it bumps.
+      github-actions:
+        patterns:
+          - "*"
+      github-actions-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
   - package-ecosystem: pub
     directory: /
     schedule:
