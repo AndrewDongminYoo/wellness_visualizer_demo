@@ -3,7 +3,9 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: daily
+      interval: weekly
+      day: monday
+      timezone: Asia/Seoul
     groups:
       # Every version update, majors included, in one PR; CI runs the actions it bumps.
       github-actions:
@@ -16,7 +18,10 @@ updates:
   - package-ecosystem: pub
     directory: /
     schedule:
-      interval: daily
+      interval: weekly
+      day: monday
+      timezone: Asia/Seoul
+    open-pull-requests-limit: 3
     ignore:
       # flutter_soloud 5 removed AudioData and GetSamplesKind, which lib/audio uses (#27 broke analyze).
       # update-types limits this to version updates; security updates still open.
