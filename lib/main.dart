@@ -1,11 +1,13 @@
-// Dart imports:
+// 🎯 Dart imports:
 import 'dart:async';
 
-// Flutter imports:
-import 'package:flutter/material.dart';
+// 🐦 Flutter imports:
 import 'package:flutter/scheduler.dart';
 
-// Project imports:
+// 📦 Package imports:
+import 'package:material_ui/material_ui.dart';
+
+// 🌎 Project imports:
 import 'package:wellness_visualizer_demo/audio/audio_engine.dart';
 import 'package:wellness_visualizer_demo/visualizers/aurora_visualizer.dart';
 import 'package:wellness_visualizer_demo/visualizers/fireflies_visualizer.dart';
@@ -15,7 +17,7 @@ void main() {
 }
 
 class DemoApp extends StatelessWidget {
-  const DemoApp({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class DemoApp extends StatelessWidget {
 enum VisualizerMode { aurora, fireflies, combined }
 
 class VisualizerScreen extends StatefulWidget {
-  const VisualizerScreen({super.key});
+  const new({super.key});
 
   @override
   State<VisualizerScreen> createState() => _VisualizerScreenState();

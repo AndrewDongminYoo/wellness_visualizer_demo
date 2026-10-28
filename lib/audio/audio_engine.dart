@@ -1,10 +1,10 @@
-// Dart imports:
+// 🎯 Dart imports:
 import 'dart:math' as math;
 
-// Flutter imports:
+// 🐦 Flutter imports:
 import 'package:flutter/foundation.dart';
 
-// Package imports:
+// 📦 Package imports:
 import 'package:flutter_soloud/flutter_soloud.dart';
 
 /// Wraps SoLoud playback + FFT analysis and exposes *smoothed* band energies
@@ -17,7 +17,7 @@ import 'package:flutter_soloud/flutter_soloud.dart';
 /// API drifts again, only [_readBands] needs edits — everything else
 /// consumes [Bands].
 class AudioEngine {
-  AudioEngine._();
+  new _();
   static final AudioEngine instance = AudioEngine._();
 
   final SoLoud _soloud = SoLoud.instance;
@@ -121,7 +121,7 @@ class AudioEngine {
 
 @immutable
 class Bands {
-  const Bands({
+  const new({
     required this.bass,
     required this.mid,
     required this.treble,

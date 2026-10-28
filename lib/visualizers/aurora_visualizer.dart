@@ -1,18 +1,20 @@
-// Dart imports:
+// 🎯 Dart imports:
 import 'dart:async';
 import 'dart:ui' as ui;
 
-// Flutter imports:
+// 🐦 Flutter imports:
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
-// Project imports:
+// 📦 Package imports:
+import 'package:material_ui/material_ui.dart';
+
+// 🌎 Project imports:
 import 'package:wellness_visualizer_demo/audio/audio_engine.dart';
 
 /// Draws the aurora fragment shader full-screen, additively over whatever
 /// sits below it in the Stack (the track's theme image).
 class AuroraVisualizer extends StatefulWidget {
-  const AuroraVisualizer({super.key, required this.time});
+  const new({super.key, required this.time});
 
   /// Elapsed time in seconds, driven by the app-level ticker.
   final ValueListenable<double> time;
@@ -52,7 +54,7 @@ class _AuroraVisualizerState extends State<AuroraVisualizer> {
 }
 
 class _AuroraPainter extends CustomPainter {
-  _AuroraPainter({
+  new({
     required this.shader,
     required this.time,
     required this.bands,

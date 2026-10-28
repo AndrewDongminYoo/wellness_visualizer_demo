@@ -1,18 +1,20 @@
-// Dart imports:
+// 🎯 Dart imports:
 import 'dart:math' as math;
 
-// Flutter imports:
+// 🐦 Flutter imports:
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
-// Project imports:
+// 📦 Package imports:
+import 'package:material_ui/material_ui.dart';
+
+// 🌎 Project imports:
 import 'package:wellness_visualizer_demo/audio/audio_engine.dart';
 
 /// Floating particles / fireflies. CustomPainter, no shader required.
 /// Motion is a slow curl-ish drift; audio maps to glow, not to velocity,
 /// so the field stays calm even on louder passages.
 class FirefliesVisualizer extends StatefulWidget {
-  const FirefliesVisualizer({super.key, required this.time, this.count = 90});
+  const new({super.key, required this.time, this.count = 90});
 
   final ValueListenable<double> time;
   final int count;
@@ -45,7 +47,7 @@ class _FirefliesVisualizerState extends State<FirefliesVisualizer> {
 }
 
 class _Firefly {
-  _Firefly({
+  new({
     required this.seedX,
     required this.seedY,
     required this.radius,
@@ -54,14 +56,14 @@ class _Firefly {
     required this.drift,
   });
 
-  factory _Firefly.random(math.Random rng) => _Firefly(
-        seedX: rng.nextDouble(),
-        seedY: rng.nextDouble(),
-        radius: 1.2 + rng.nextDouble() * 2.6,
-        phase: rng.nextDouble() * math.pi * 2,
-        hueShift: rng.nextDouble(),
-        drift: 0.6 + rng.nextDouble() * 0.8,
-      );
+  factory random(math.Random rng) => _Firefly(
+    seedX: rng.nextDouble(),
+    seedY: rng.nextDouble(),
+    radius: 1.2 + rng.nextDouble() * 2.6,
+    phase: rng.nextDouble() * math.pi * 2,
+    hueShift: rng.nextDouble(),
+    drift: 0.6 + rng.nextDouble() * 0.8,
+  );
 
   final double seedX;
   final double seedY;
@@ -80,7 +82,7 @@ class _Firefly {
 }
 
 class _FirefliesPainter extends CustomPainter {
-  _FirefliesPainter({
+  new({
     required this.flies,
     required this.time,
     required this.bands,
