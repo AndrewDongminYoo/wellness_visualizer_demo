@@ -169,6 +169,26 @@ void main() {
     expect(soloud.initCalls, 2);
   });
 
+  test('overlapping plays do not leave FFT delivery active after stop', () async {
+    await engine.init();
+    final barrier = Completer<void>();
+    soloud.loadBarrier = barrier;
+
+    final first = engine.playAsset('first.mp3');
+    final second = engine.playAsset('second.mp3');
+    await Future<void>.delayed(Duration.zero);
+    expect(soloud.loadedAssets, ['first.mp3', 'second.mp3']);
+
+    barrier.complete();
+    await Future.wait([first, second]);
+    await engine.stop();
+    soloud.emit(_packet(bass: 1, mid: 1, treble: 1));
+    engine.update(10);
+
+    _expectBands(engine.bands.value);
+    expect(soloud.visualization.hasListener, isFalse);
+  });
+
   test('a failed asset load leaves playback stopped without an FFT subscription', () async {
     await engine.playAsset('track.mp3');
     soloud.emit(_packet(bass: 1));
@@ -217,6 +237,7 @@ class _FakeSoLoud implements SoLoud {
   double? smoothing;
   bool? looping;
   Exception? loadError;
+  Completer<void>? loadBarrier;
 
   @override
   bool get isInitialized => _initialized;
@@ -273,6 +294,7 @@ class _FakeSoLoud implements SoLoud {
   }) async {
     if (loadError case final error?) throw error;
     loadedAssets.add(key);
+    if (loadBarrier case final barrier?) await barrier.future;
     return _FakeAudioSource();
   }
 

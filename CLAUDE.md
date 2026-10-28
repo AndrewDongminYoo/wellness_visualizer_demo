@@ -57,6 +57,7 @@ The code targets flutter_soloud ^5.2.2 and listens to `audioVisualizationEvents`
 Visualization uses `VisualizationKind.fft` and a 512-sample window, producing 256 FFT bins to preserve the existing band ranges.
 The stream updates raw band targets; `AudioEngine.update` applies the existing frame-based attack/release smoothing.
 `stop` cancels the subscription and clears raw targets so the displayed bands decay toward silence.
+Replacing a visualization subscription cancels the previous listener, including when asset loads overlap.
 Keep plugin API changes inside `AudioEngine` — everything else consumes `Bands`.
 
 ## Known Config Quirks

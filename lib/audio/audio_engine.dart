@@ -44,6 +44,7 @@ class AudioEngine {
     await stop();
     _source = await _soloud.loadAsset(assetPath);
     _handle = _soloud.play(_source, looping: true);
+    unawaited(_visualizationSubscription?.cancel());
     _visualizationSubscription = _soloud.audioVisualizationEvents.listen(_readBands);
   }
 
