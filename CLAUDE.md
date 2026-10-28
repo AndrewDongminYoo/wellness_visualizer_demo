@@ -22,6 +22,8 @@ dart run import_sorter:main
 Common task scripts (run/test/format/reinstall) are defined in `merry.yaml` (referenced from `pubspec.yaml`'s `scripts:` key).
 The audio engine test suite lives in `test/audio/audio_engine_test.dart`.
 It injects a fake SoLoud device boundary to verify stream consumption, FFT band mapping, smoothing, and playback lifecycle without opening an audio device.
+Visualizer tests live in `test/visualizers/` and exercise the actual painters and Flutter test renderer.
+They check Aurora's positional shader uniforms against a render using named uniforms, Fireflies' particle geometry and audio mapping, repainting without painter rebuilds, and listener removal on unmount.
 These tests do not verify native decoding, physical audio output, or device rendering performance; check those with `flutter run` on a device.
 The two runtime assets (`assets/audio/ambient.mp3`, `assets/images/theme.jpg`) are royalty-free and committed to the repo.
 

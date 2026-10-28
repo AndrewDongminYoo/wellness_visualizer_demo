@@ -60,7 +60,10 @@ jobs:
           dart format --line-length 120 --set-exit-if-changed lib test
 
       - name: 🕵️ Analyze
-        run: flutter analyze lib
+        run: flutter analyze lib test
+
+      - name: 🧪 Test
+        run: flutter test --concurrency=4 --test-randomize-ordering-seed=random --dart-define=FLUTTER_TEST=true --no-color
 
   spell-check:
     defaults:
