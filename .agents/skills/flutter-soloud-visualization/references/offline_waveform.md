@@ -41,7 +41,7 @@ Future<void> _loadPath(int width, PlatformFile file) async {
       average: average,
     );
   } else {
-    final bytes = File(file.path!).readAsBytesSync();
+    final bytes = await File(file.path!).readAsBytes();
     data = await SoLoud.instance.readSamplesFromMem(
       bytes,
       width * 4,
@@ -67,7 +67,8 @@ class WavePainter extends CustomPainter {
       ..strokeWidth = barWidth;
 
     for (var i = 0; i < data.length; i++) {
-      final barHeight = size.height * data[i] * 2;
+      final sample = data[i].clamp(-1.0, 1.0);
+      final barHeight = size.height * sample;
       canvas.drawLine(
         Offset(barWidth * i, (size.height - barHeight) / 2),
         Offset(barWidth * i, (size.height + barHeight) / 2),

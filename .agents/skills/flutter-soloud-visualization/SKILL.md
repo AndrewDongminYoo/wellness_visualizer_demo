@@ -17,6 +17,7 @@ Pick the right one. The live stream cannot give you the waveform of a not-yet-pl
 
 ```dart
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
@@ -39,6 +40,7 @@ class _VisualizerState extends State<Visualizer> {
 
   Future<void> _init() async {
     await SoLoud.instance.init(); // must complete first
+    if (!mounted) return;
     SoLoud.instance.setVisualizationEnabled(
       true,
       windowSize: 256,
@@ -94,7 +96,9 @@ class BarsPainter extends CustomPainter {
 ## Minimal example (offline waveform)
 
 ```dart
-import 'package:flutter/foundation.dart';
+import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_soloud/flutter_soloud.dart';
 
 // No SoLoud.instance.init() needed — the readers run their own decoder
