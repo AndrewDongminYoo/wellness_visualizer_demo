@@ -1,4 +1,5 @@
 // 🎯 Dart imports:
+import 'dart:async';
 import 'dart:math' as math;
 
 // 🐦 Flutter imports:
@@ -7,23 +8,18 @@ import 'package:flutter/foundation.dart';
 // 📦 Package imports:
 import 'package:flutter_soloud/flutter_soloud.dart';
 
-/// Wraps SoLoud playback + FFT analysis and exposes *smoothed* band energies
-/// tuned for a wellness aesthetic: fast attack, slow release, so visuals
-/// "swell" with the music instead of strobing on every beat.
+/// Wraps SoLoud playback + FFT analysis and exposes *smoothed* band energies tuned for a wellness aesthetic: fast attack, slow release, so visuals "swell" with the music instead of strobing on every beat.
 ///
-/// NOTE: flutter_soloud's AudioData API has had breaking changes between
-/// major versions. This file is written against ^4.x, where per-sample
-/// getters (`getLinearFft`) were replaced by [AudioData.getAudioData]. If the
-/// API drifts again, only [_readBands] needs edits — everything else
-/// consumes [Bands].
+/// Receives FFT packets from SoLoud's visualization stream and applies frame-based smoothing in [update].
+/// Visualizers consume [Bands] independently of the plugin's visualization API.
 class AudioEngine {
-  new _();
-  static final AudioEngine instance = AudioEngine._();
+  new({SoLoud? soloud}) : _soloud = soloud ?? SoLoud.instance;
+  static final AudioEngine instance = AudioEngine();
 
-  final SoLoud _soloud = SoLoud.instance;
+  final SoLoud _soloud;
   late AudioSource _source;
   SoundHandle? _handle;
-  AudioData? _audioData;
+  StreamSubscription<AudioVisualizationData>? _visualizationSubscription;
 
   /// Smoothed 0..1 energies, updated once per frame via [update].
   final ValueNotifier<Bands> bands = ValueNotifier(Bands.zero);
@@ -33,7 +29,11 @@ class AudioEngine {
   Future<void> init() async {
     if (_soloud.isInitialized) return;
     await _soloud.init();
-    _soloud.setVisualizationEnabled(true);
+    _soloud.setVisualizationEnabled(
+      true,
+      windowSize: 512,
+      kind: VisualizationKind.fft,
+    );
     // Smooth SoLoud's own FFT windowing a touch; we do the musical
     // smoothing ourselves in [update].
     _soloud.setFftSmoothing(0.6);
@@ -44,15 +44,18 @@ class AudioEngine {
     await stop();
     _source = await _soloud.loadAsset(assetPath);
     _handle = _soloud.play(_source, looping: true);
-    _audioData = AudioData(GetSamplesKind.linear);
+    _visualizationSubscription = _soloud.audioVisualizationEvents.listen(_readBands);
   }
 
   Future<void> stop() async {
     final h = _handle;
     _handle = null;
+    _rawBass = 0;
+    _rawMid = 0;
+    _rawTreble = 0;
+    await _visualizationSubscription?.cancel();
+    _visualizationSubscription = null;
     if (h != null) await _soloud.stop(h);
-    _audioData?.dispose();
-    _audioData = null;
   }
 
   // -- analysis ------------------------------------------------------------
@@ -70,12 +73,6 @@ class AudioEngine {
 
   /// Call once per frame with the frame delta in seconds.
   void update(double dt) {
-    final data = _audioData;
-    if (data != null && _handle != null) {
-      data.updateSamples();
-      _readBands(data);
-    }
-
     // Wellness tuning: reach ~90% of a rising value in ~120ms (attack),
     // but take ~1.8s to decay (release). No strobe, only swell.
     double follow(double current, double target) {
@@ -92,11 +89,10 @@ class AudioEngine {
     bands.value = Bands(bass: _bass, mid: _mid, treble: _treble, energy: _energy);
   }
 
-  void _readBands(AudioData data) {
-    // With GetSamplesKind.linear the first 256 floats are FFT bins spanning
-    // ~0..22kHz (~86Hz per bin); the next 256 are raw wave samples.
-    final samples = data.getAudioData();
-    if (samples.length < 256) return;
+  void _readBands(AudioVisualizationData data) {
+    // A 512-sample window provides 256 FFT bins (~86Hz per bin at 44.1kHz).
+    final samples = data.fftData;
+    if (samples == null || samples.length < 256) return;
 
     double avg(int from, int to) {
       var sum = 0.0;
