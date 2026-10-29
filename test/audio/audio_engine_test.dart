@@ -298,6 +298,27 @@ void main() {
     expect(soloud.activeHandles, hasLength(1));
   });
 
+  test('dispose contains a pending initialization failure and permits retry', () async {
+    final barrier = Completer<void>();
+    soloud.initBarrier = barrier;
+    final failure = StateError('device unavailable');
+    final initialization = expectLater(engine.init(), throwsA(same(failure)));
+    await Future<void>.delayed(Duration.zero);
+    final disposal = expectLater(engine.dispose(), completes);
+    await Future<void>.delayed(Duration.zero);
+
+    barrier.completeError(failure);
+    await Future.wait([initialization, disposal]);
+
+    expect(soloud.deinitCalls, 1);
+    expect(soloud.isInitialized, isFalse);
+    expect(soloud.activeHandles, isEmpty);
+    soloud.initBarrier = null;
+    await engine.playAsset('retry.mp3');
+    expect(soloud.initCalls, 2);
+    expect(soloud.playedAssets, ['retry.mp3']);
+  });
+
   test('a superseded load failure does not reject the latest playback', () async {
     final barrier = Completer<void>();
     soloud.loadBarriers['first.mp3'] = barrier;
@@ -355,6 +376,7 @@ class _FakeSoLoud implements SoLoud {
   final loadBarriers = <String, Completer<void>>{};
   final loadErrors = <String, Exception>{};
   int initCalls = 0;
+  int deinitCalls = 0;
   int _nextHandle = 0;
   bool _initialized = false;
   bool visualizationEnabled = false;
@@ -459,6 +481,7 @@ class _FakeSoLoud implements SoLoud {
 
   @override
   void deinit() {
+    deinitCalls++;
     _initialized = false;
     visualizationEnabled = false;
     activeHandles.clear();

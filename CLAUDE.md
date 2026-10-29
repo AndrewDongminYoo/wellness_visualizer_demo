@@ -60,6 +60,7 @@ The stream updates raw band targets; `AudioEngine.update` applies the existing f
 Replacing a visualization subscription cancels the previous listener, including when asset loads overlap.
 Only the latest playback request can start a voice; `stop` and `dispose` invalidate pending loads.
 Concurrent playback requests share initialization, and disposal waits for initialization before releasing the engine.
+Disposal still completes if pending initialization fails; the initialization caller receives that error.
 Keep plugin API changes inside `AudioEngine` — everything else consumes `Bands`.
 
 ## Known Config Quirks

@@ -153,6 +153,8 @@ class AudioEngine {
     await _stopCurrentPlayback();
     try {
       await _initializing;
+    } catch (_) {
+      // The initialization caller receives its error; teardown must still finish.
     } finally {
       _soloud.deinit();
     }
