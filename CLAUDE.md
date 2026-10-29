@@ -14,12 +14,17 @@ Keep changes small and demo-focused — no architecture beyond what the recordin
 flutter pub get
 flutter run                # use a physical device — simulators misrepresent shader performance
 flutter analyze
+flutter test --concurrency=4 --test-randomize-ordering-seed=random --dart-define=FLUTTER_TEST=true --no-color
 dart format --line-length 120 .
 dart run import_sorter:main
 ```
 
 Common task scripts (run/test/format/reinstall) are defined in `merry.yaml` (referenced from `pubspec.yaml`'s `scripts:` key).
-There is no test suite.
+The audio engine test suite lives in `test/audio/audio_engine_test.dart`.
+It injects a fake SoLoud device boundary to verify stream consumption, FFT band mapping, smoothing, and playback lifecycle without opening an audio device.
+Visualizer tests live in `test/visualizers/` and exercise the actual painters and Flutter test renderer.
+They check Aurora's positional shader uniforms against a render using named uniforms, Fireflies' particle geometry and audio mapping, repainting without painter rebuilds, and listener removal on unmount.
+These tests do not verify native decoding, physical audio output, or device rendering performance; check those with `flutter run` on a device.
 The two runtime assets (`assets/audio/ambient.mp3`, `assets/images/theme.jpg`) are royalty-free and committed to the repo.
 
 ## Architecture
@@ -48,8 +53,12 @@ Changing the shader's uniform order requires updating the painter in lockstep.
 
 ### flutter_soloud API drift
 
-The `AudioData` API has breaking changes across major versions; the code targets ^4.x, where per-sample getters (`getLinearFft`) were replaced by `getAudioData()` returning a `Float32List` (linear mode: first 256 floats = FFT bins, next 256 = wave samples).
-If the API drifts again, fix only `AudioEngine._readBands` (compare with the package's `example/` visualizer) — everything else consumes `Bands` and is unaffected.
+The code targets flutter_soloud ^5.2.2 and listens to `audioVisualizationEvents` for `AudioVisualizationData.fftData` instead of polling the removed `AudioData` API.
+Visualization uses `VisualizationKind.fft` and a 512-sample window, producing 256 FFT bins to preserve the existing band ranges.
+The stream updates raw band targets; `AudioEngine.update` applies the existing frame-based attack/release smoothing.
+`stop` cancels the subscription and clears raw targets so the displayed bands decay toward silence.
+Replacing a visualization subscription cancels the previous listener, including when asset loads overlap.
+Keep plugin API changes inside `AudioEngine` — everything else consumes `Bands`.
 
 ## Known Config Quirks
 

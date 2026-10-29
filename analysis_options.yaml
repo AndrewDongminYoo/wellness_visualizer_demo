@@ -25,8 +25,6 @@ linter:
     always_specify_types: false
     # The `avoid_types_on_closure_parameters` rule is incompatible with the `always_specify_types` rule.
     avoid_types_on_closure_parameters: false
-    # The `prefer_final_parameters` rule is incompatible with the `unnecessary_final` rule.
-    prefer_final_parameters: false
     # The `avoid_final_parameters` rule is incompatible with the `prefer_final_parameters` rule.
     avoid_final_parameters: false
     # The `unnecessary_final` rule is incompatible with `prefer_final_locals`, `prefer_final_parameters`, and `prefer_final_in_for_each`.
@@ -70,8 +68,6 @@ linter:
     constant_identifier_names: false
     # Some packages (e.g., auto_route) require using context in routing.
     use_build_context_synchronously: false
-    # Disable this rule when using proxy classes.
-    one_member_abstracts: false
     # Functions returning Future without using the `await` keyword may be unrecognized.
     unnecessary_async: false
     # Disable this rule when using generic types.
