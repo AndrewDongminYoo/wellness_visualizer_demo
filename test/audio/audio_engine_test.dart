@@ -268,7 +268,7 @@ void main() {
     expect(soloud.activeHandles, hasLength(1));
   });
 
-  test('dispose waits for pending initialization before deinitializing', () async {
+  test('dispose waits for pending initialization before releasing the engine', () async {
     final barrier = Completer<void>();
     soloud.initBarrier = barrier;
     final playback = engine.playAsset('track.mp3');
