@@ -1,7 +1,7 @@
 # .github/
 
 CI, PR metadata, and tool-facing repository automation.
-Inherit `AGENTS.md` first.
+Follow the operator's repository instructions and use `CLAUDE.md` for project commands and architecture.
 
 ## Where to look
 
@@ -15,5 +15,5 @@ Inherit `AGENTS.md` first.
 - PR titles to `main` must be semantic.
 - Formatting checks `lib` and `test`.
 - Analysis runs on `lib` and `test`.
-- Tests run with coverage and upload filtered coverage to Codecov.
+- The randomized Flutter test suite runs in the build job.
 - `cspell` runs across the repository.

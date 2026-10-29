@@ -1,12 +1,12 @@
-# Copilot Instructions — WarmWake
+# Copilot Instructions — Wellness Visualizer
 
-This file is a Copilot-specific adapter over `AGENTS.md`.
+This file is a Copilot-specific adapter for the demo's existing documentation.
 
 ## Start here
 
-- Read `AGENTS.md` first.
-- Use `PLAN.md` as the default execution queue.
-- Use `docs/core/PRODUCT.md` for product intent.
+- Follow the operator's repository instructions.
+- Use `README.md` for demo intent and `CLAUDE.md` for commands and architecture.
+- Use an approved task spec or plan under `docs/specs/` and `docs/plans/` when supplied.
 
 ## Copilot defaults
 
@@ -14,7 +14,7 @@ This file is a Copilot-specific adapter over `AGENTS.md`.
 - Follow TDD for behavior changes.
 - Keep structural refactors separate from behavioral changes.
 - Verify repo facts instead of guessing.
-- Keep this file thin; shared workflow and verification policy belong in `AGENTS.md`.
+- Preserve notifier-driven painter updates and the audio envelope tuning documented in `CLAUDE.md`.
 
 ## Response guidance
 
@@ -22,4 +22,4 @@ This file is a Copilot-specific adapter over `AGENTS.md`.
 - Summarize changed files and why they changed.
 - Include exact verification commands.
 
-For command details, use `scripts/AGENTS.md`.
+For CI expectations, use `.github/AGENTS.md` and `.github/workflows/main.yaml`.
