@@ -175,6 +175,7 @@ void main() {
     soloud.loadBarrier = barrier;
 
     final first = engine.playAsset('first.mp3');
+    await Future<void>.delayed(Duration.zero);
     final second = engine.playAsset('second.mp3');
     await Future<void>.delayed(Duration.zero);
     expect(soloud.loadedAssets, ['first.mp3', 'second.mp3']);
@@ -187,6 +188,128 @@ void main() {
 
     _expectBands(engine.bands.value);
     expect(soloud.visualization.hasListener, isFalse);
+  });
+
+  for (final olderFinishesFirst in [true, false]) {
+    test('only the latest load plays when older finishes first: $olderFinishesFirst', () async {
+      final older = Completer<void>();
+      final newer = Completer<void>();
+      soloud.loadBarriers.addAll({'first.mp3': older, 'second.mp3': newer});
+
+      final first = engine.playAsset('first.mp3');
+      await Future<void>.delayed(Duration.zero);
+      final second = engine.playAsset('second.mp3');
+      await Future<void>.delayed(Duration.zero);
+      expect(soloud.loadedAssets, ['first.mp3', 'second.mp3']);
+
+      if (olderFinishesFirst) {
+        older.complete();
+        await first;
+        expect(soloud.playedAssets, isEmpty);
+        newer.complete();
+      } else {
+        newer.complete();
+        await second;
+        older.complete();
+      }
+      await Future.wait([first, second]);
+
+      expect(soloud.playedAssets, ['second.mp3']);
+      expect(soloud.activeHandles, hasLength(1));
+      await engine.stop();
+      expect(soloud.activeHandles, isEmpty);
+    });
+  }
+
+  test('stop invalidates a pending asset load', () async {
+    final barrier = Completer<void>();
+    soloud.loadBarrier = barrier;
+    final playback = engine.playAsset('track.mp3');
+    await Future<void>.delayed(Duration.zero);
+    expect(soloud.loadedAssets, ['track.mp3']);
+
+    await engine.stop();
+    barrier.complete();
+    await playback;
+
+    expect(engine.isPlaying, isFalse);
+    expect(soloud.playedAssets, isEmpty);
+    expect(soloud.activeHandles, isEmpty);
+    expect(soloud.visualization.hasListener, isFalse);
+  });
+
+  test('dispose invalidates a pending asset load', () async {
+    final barrier = Completer<void>();
+    soloud.loadBarrier = barrier;
+    final playback = engine.playAsset('track.mp3');
+    await Future<void>.delayed(Duration.zero);
+
+    await engine.dispose();
+    barrier.complete();
+    await playback;
+
+    expect(soloud.isInitialized, isFalse);
+    expect(engine.isPlaying, isFalse);
+    expect(soloud.activeHandles, isEmpty);
+    expect(soloud.visualization.hasListener, isFalse);
+  });
+
+  test('simultaneous plays share engine initialization', () async {
+    final barrier = Completer<void>();
+    soloud.initBarrier = barrier;
+    final first = engine.playAsset('first.mp3');
+    final second = engine.playAsset('second.mp3');
+    await Future<void>.delayed(Duration.zero);
+    expect(soloud.initCalls, 1);
+
+    barrier.complete();
+    await Future.wait([first, second]);
+    expect(soloud.playedAssets, ['second.mp3']);
+    expect(soloud.activeHandles, hasLength(1));
+  });
+
+  test('dispose waits for pending initialization before deinitializing', () async {
+    final barrier = Completer<void>();
+    soloud.initBarrier = barrier;
+    final playback = engine.playAsset('track.mp3');
+    await Future<void>.delayed(Duration.zero);
+    final disposal = engine.dispose();
+    barrier.complete();
+    await Future.wait([playback, disposal]);
+
+    expect(soloud.isInitialized, isFalse);
+    expect(soloud.activeHandles, isEmpty);
+    expect(soloud.playedAssets, isEmpty);
+  });
+
+  test('new playback waits for disposal and then reinitializes', () async {
+    final barrier = Completer<void>();
+    soloud.initBarrier = barrier;
+    final first = engine.playAsset('first.mp3');
+    await Future<void>.delayed(Duration.zero);
+    final disposal = engine.dispose();
+    final second = engine.playAsset('second.mp3');
+    barrier.complete();
+    await Future.wait([first, disposal, second]);
+
+    expect(soloud.initCalls, 2);
+    expect(soloud.isInitialized, isTrue);
+    expect(soloud.playedAssets, ['second.mp3']);
+    expect(soloud.activeHandles, hasLength(1));
+  });
+
+  test('a superseded load failure does not reject the latest playback', () async {
+    final barrier = Completer<void>();
+    soloud.loadBarriers['first.mp3'] = barrier;
+    soloud.loadErrors['first.mp3'] = Exception('cancelled load');
+    final first = engine.playAsset('first.mp3');
+    await Future<void>.delayed(Duration.zero);
+    await engine.playAsset('second.mp3');
+    barrier.complete();
+    await first;
+
+    expect(soloud.playedAssets, ['second.mp3']);
+    expect(soloud.activeHandles, hasLength(1));
   });
 
   test('a failed asset load leaves playback stopped without an FFT subscription', () async {
@@ -227,6 +350,10 @@ class _FakeSoLoud implements SoLoud {
   final visualization = StreamController<AudioVisualizationData>.broadcast(sync: true);
   final loadedAssets = <String>[];
   final stoppedHandles = <SoundHandle>[];
+  final playedAssets = <String>[];
+  final activeHandles = <SoundHandle>{};
+  final loadBarriers = <String, Completer<void>>{};
+  final loadErrors = <String, Exception>{};
   int initCalls = 0;
   int _nextHandle = 0;
   bool _initialized = false;
@@ -238,6 +365,7 @@ class _FakeSoLoud implements SoLoud {
   bool? looping;
   Exception? loadError;
   Completer<void>? loadBarrier;
+  Completer<void>? initBarrier;
 
   @override
   bool get isInitialized => _initialized;
@@ -263,6 +391,7 @@ class _FakeSoLoud implements SoLoud {
     int? renderAheadFrames,
   }) async {
     initCalls++;
+    if (initBarrier case final barrier?) await barrier.future;
     _initialized = true;
   }
 
@@ -294,8 +423,10 @@ class _FakeSoLoud implements SoLoud {
   }) async {
     if (loadError case final error?) throw error;
     loadedAssets.add(key);
-    if (loadBarrier case final barrier?) await barrier.future;
-    return _FakeAudioSource();
+    final barrier = loadBarriers[key] ?? loadBarrier;
+    if (barrier != null) await barrier.future;
+    if (loadErrors[key] case final error?) throw error;
+    return _FakeAudioSource(key);
   }
 
   @override
@@ -312,19 +443,25 @@ class _FakeSoLoud implements SoLoud {
     int? loopingEndOffsetAt,
     double scale = 1,
   }) {
+    if (!_initialized) throw const SoLoudNotInitializedException();
     this.looping = looping;
-    return SoundHandle(++_nextHandle);
+    playedAssets.add(sound.soundPath);
+    final handle = SoundHandle(++_nextHandle);
+    activeHandles.add(handle);
+    return handle;
   }
 
   @override
   Future<void> stop(SoundHandle handle) async {
     stoppedHandles.add(handle);
+    activeHandles.remove(handle);
   }
 
   @override
   void deinit() {
     _initialized = false;
     visualizationEnabled = false;
+    activeHandles.clear();
   }
 
   @override
@@ -332,6 +469,11 @@ class _FakeSoLoud implements SoLoud {
 }
 
 class _FakeAudioSource implements AudioSource {
+  new(this.soundPath);
+
+  @override
+  String soundPath;
+
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

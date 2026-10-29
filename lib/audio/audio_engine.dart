@@ -17,9 +17,11 @@ class AudioEngine {
   static final AudioEngine instance = AudioEngine();
 
   final SoLoud _soloud;
-  late AudioSource _source;
   SoundHandle? _handle;
   StreamSubscription<AudioVisualizationData>? _visualizationSubscription;
+  Future<void>? _initializing;
+  Future<void>? _disposing;
+  int _playbackRequest = 0;
 
   /// Smoothed 0..1 energies, updated once per frame via [update].
   final ValueNotifier<Bands> bands = ValueNotifier(Bands.zero);
@@ -27,7 +29,22 @@ class AudioEngine {
   bool get isPlaying => _handle != null;
 
   Future<void> init() async {
+    if (_disposing case final disposal?) await disposal;
+    if (_initializing case final initialization?) {
+      await initialization;
+      return;
+    }
     if (_soloud.isInitialized) return;
+    final initialization = _initialize();
+    _initializing = initialization;
+    try {
+      await initialization;
+    } finally {
+      _initializing = null;
+    }
+  }
+
+  Future<void> _initialize() async {
     await _soloud.init();
     _soloud.setVisualizationEnabled(
       true,
@@ -40,22 +57,39 @@ class AudioEngine {
   }
 
   Future<void> playAsset(String assetPath) async {
-    await init();
-    await stop();
-    _source = await _soloud.loadAsset(assetPath);
-    _handle = _soloud.play(_source, looping: true);
-    unawaited(_visualizationSubscription?.cancel());
-    _visualizationSubscription = _soloud.audioVisualizationEvents.listen(_readBands);
+    final request = ++_playbackRequest;
+    try {
+      if (_disposing case final disposal?) await disposal;
+      if (request != _playbackRequest) return;
+      await init();
+      if (request != _playbackRequest) return;
+      await _stopCurrentPlayback();
+      if (request != _playbackRequest) return;
+      final source = await _soloud.loadAsset(assetPath);
+      if (request != _playbackRequest) return;
+      _handle = _soloud.play(source, looping: true);
+      unawaited(_visualizationSubscription?.cancel());
+      _visualizationSubscription = _soloud.audioVisualizationEvents.listen(_readBands);
+    } catch (_) {
+      if (request != _playbackRequest) return;
+      rethrow;
+    }
   }
 
-  Future<void> stop() async {
+  Future<void> stop() {
+    _playbackRequest++;
+    return _stopCurrentPlayback();
+  }
+
+  Future<void> _stopCurrentPlayback() async {
     final h = _handle;
+    final subscription = _visualizationSubscription;
     _handle = null;
+    _visualizationSubscription = null;
     _rawBass = 0;
     _rawMid = 0;
     _rawTreble = 0;
-    await _visualizationSubscription?.cancel();
-    _visualizationSubscription = null;
+    await subscription?.cancel();
     if (h != null) await _soloud.stop(h);
   }
 
@@ -110,9 +144,18 @@ class AudioEngine {
     _rawTreble = (avg(64, 192) * 6.0).clamp(0.0, 1.0);
   }
 
-  Future<void> dispose() async {
-    await stop();
-    _soloud.deinit();
+  Future<void> dispose() {
+    _playbackRequest++;
+    return _disposing ??= _dispose().whenComplete(() => _disposing = null);
+  }
+
+  Future<void> _dispose() async {
+    await _stopCurrentPlayback();
+    try {
+      await _initializing;
+    } finally {
+      _soloud.deinit();
+    }
   }
 }
 

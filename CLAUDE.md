@@ -58,6 +58,8 @@ Visualization uses `VisualizationKind.fft` and a 512-sample window, producing 25
 The stream updates raw band targets; `AudioEngine.update` applies the existing frame-based attack/release smoothing.
 `stop` cancels the subscription and clears raw targets so the displayed bands decay toward silence.
 Replacing a visualization subscription cancels the previous listener, including when asset loads overlap.
+Only the latest playback request can start a voice; `stop` and `dispose` invalidate pending loads.
+Concurrent playback requests share initialization, and disposal waits for initialization before deinitializing the engine.
 Keep plugin API changes inside `AudioEngine` — everything else consumes `Bands`.
 
 ## Known Config Quirks
