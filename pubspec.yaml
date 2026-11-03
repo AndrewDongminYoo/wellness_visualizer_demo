@@ -12,7 +12,7 @@ dependencies:
   # SoLoud gives us realtime FFT/waveform data from the *playing* track,
   # which just_audio does not expose. Visualization is its core use case.
   flutter_soloud: ^5.2.2
-  material_ui: ^1.8.0
+  material_ui: ^1.9.0
 
 dev_dependencies:
   flutter_test:
