@@ -4,7 +4,7 @@
 
 The engine polls the removed flutter_soloud 4.x `AudioData` API while the dependency is upgraded to 5.2.2.
 Migrate to `audioVisualizationEvents`, preserve the existing `Bands` interface and attack/release tuning, and add repeatable audio and visualizer tests.
-The operator also approved including the existing Dart SDK, Material UI imports, constructor syntax, lint configuration, and generated plugin registration updates in this PR.
+Including the existing Dart SDK, Material UI imports, constructor syntax, lint configuration, and generated plugin registration updates in this PR was also approved.
 
 ## Acceptance criteria
 
@@ -21,4 +21,4 @@ The operator also approved including the existing Dart SDK, Material UI imports,
 Keep the existing visualizer algorithms, shader uniforms, colors, and motion rules.
 Do not add runtime abstractions or test dependencies beyond the Flutter SDK test package.
 Flutter renderer tests do not establish native decoding, physical audio output, or device GPU performance.
-The audio migration and Material UI dependency transition require operator review of motion evidence before merge.
+The audio migration and Material UI dependency transition require user review of motion evidence before merge.
