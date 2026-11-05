@@ -2,7 +2,7 @@
 
 ## Approved direction
 
-Complete the requested migration and test additions, include all current changes as approved by the operator, and deliver them through the explicit `pr-loop` invocation.
+Complete the requested migration and test additions, include all current changes as approved, and deliver them through the explicit `pr-loop` invocation.
 Implementation and observed regression failures already exist; reuse that work.
 
 ## Commit sequence
@@ -21,6 +21,6 @@ Implementation and observed regression failures already exist; reuse that work.
 Use independent read-only passes for audio lifecycle and rendering/test integration, followed by a root cross-check.
 Inspect each candidate index before committing and verify that the intermediate manifest and lockfile agree.
 Push a task branch and open a non-draft PR against `main`.
-Observe bounded current-head CI and hosted review, address confirmed findings, and finalize the PR body before assigning the operator.
-Preserve visible motion evidence and request operator visual approval before the delegated merge.
+Observe bounded current-head CI and hosted review, address confirmed findings, and finalize the PR body before assigning the user.
+Preserve visible motion evidence and request user visual approval before the delegated merge.
 Keep cleanup and memory recording outside scope because neither was requested.

@@ -4,7 +4,7 @@ This file is a Copilot-specific adapter for the demo's existing documentation.
 
 ## Start here
 
-- Follow the operator's repository instructions.
+- Follow the user's repository instructions.
 - Use `README.md` for demo intent and `CLAUDE.md` for commands and architecture.
 - Use an approved task spec or plan under `docs/specs/` and `docs/plans/` when supplied.
 
