@@ -1,7 +1,7 @@
 # .github/
 
 CI, PR metadata, and tool-facing repository automation.
-Follow the operator's repository instructions and use `CLAUDE.md` for project commands and architecture.
+Follow the user's repository instructions and use `CLAUDE.md` for project commands and architecture.
 
 ## Where to look
 
