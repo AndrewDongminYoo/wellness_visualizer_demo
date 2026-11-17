@@ -60,6 +60,13 @@ flutter pub get
 flutter run  # assets (ambient track + theme image) are included
 ```
 
+## Automation checks
+
+Pull requests run the pinned Claude Code Action's upstream unit tests and TypeScript checks with Bun 1.4.4.
+Run `bash scripts/test_claude_action.sh` to perform the same check locally.
+The script reads the SHA from `.github/workflows/claude.yml`, so an action update tests the updated source.
+This check needs no credentials; authenticated Claude API calls and GitHub comment writes remain outside its coverage.
+
 ## License
 
 MIT — © Andrew Dongmin Yoo
