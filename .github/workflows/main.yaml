@@ -82,3 +82,23 @@ jobs:
           incremental_files_only: false
           root: .
           verbose: false
+
+  claude-action:
+    name: Claude Action tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install the action's Bun runtime
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.4
+
+      - name: Test the pinned action without credentials
+        run: bash scripts/test_claude_action.sh
