@@ -111,10 +111,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_soloud
-      sha256: d7c2e20c7bf7afdd70d14ed48e741b13f175f0496b92c12eebf3dda455e2581e
+      sha256: a6790d87ba46c7b5ee9f121810e2c442346698a0ef13403d450d734d60086208
       url: "https://pub.dev"
     source: hosted
-    version: "5.3.1"
+    version: "5.3.2"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -172,10 +172,10 @@ packages:
     dependency: transitive
     description:
       name: jni
-      sha256: "822c3f004742158b80b558773ebed29891f407058d5798992436a68bdf14ccda"
+      sha256: "19764f78f6b9e0d40f6395b04649d1046eb57f5ccf05afce50cc63e5a82777b0"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   jni_flutter:
     dependency: transitive
     description:
